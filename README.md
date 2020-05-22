@@ -61,9 +61,9 @@ following requirements:
     - Catchup is turned off
     - Do not email on retry <br/>
 2. Custom developed Airflow plugins: <br/>
-a. Helpers:
-   This is where we define our SQL queries for fact and dimensional table inserts <br/>
-b. Operators: 
+ a. Helpers:
+   This is where we define our SQL queries for fact and dimensional table inserts
+ b. Operators: 
     We define following custom operators:
     1. stage_redshift.py: This is a template operater which accepts as parameters the S3 bucket details from where the 
     data will be loaded and a stage table name to which data will be loaded to.

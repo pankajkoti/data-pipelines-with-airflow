@@ -2,7 +2,7 @@
 
 ## Summary of the Project
 This project applies data pipelining (ELT) using Airflow to build pipelines 
-to load data to a Redshift cluster. pipeline using Python. <br/>
+to load data to a Redshift cluster. <br/>
 The ELT pipeline is mainly responsible for following tasks:
 1. Load staging data from S3 files to stage tables in Redshift
 2. Transform the raw stage data from these stage tables to a fact table
@@ -52,26 +52,27 @@ Following is how we modelled the data in 1 fact table and 4 corresponding dimens
 
 ## Project structure
 
-1. DAGs:
+1. DAG:
 This is where we declare tasks within a DAG. For our DAG we have a config defined with
 following requirements:
     - The DAG does not have dependencies on past runs
-    - On failure, the task are retried 3 times
+    - On failure, the tasks are retried 3 times
     - Retries happen every 5 minutes
     - Catchup is turned off
-    - Do not email on retry
+    - Do not email on retry <br/>
 2. Custom developed Airflow plugins: <br/>
 a. Helpers:
-    This is where we define our SQL queries for fact and dimensional table inserts
+   This is where we define our SQL queries for fact and dimensional table inserts <br/>
 b. Operators: 
     We define following custom operators:
-    1. stage_redshift.py: This is a template operate which accepts as parameters the S3 bucket details from where the 
-    data will be loaded and stage table name to which it will be loaded to.
-    We need to provide Airflow connection ids to this operator, one to connect to AWS for S3 access
+    1. stage_redshift.py: This is a template operater which accepts as parameters the S3 bucket details from where the 
+    data will be loaded and a stage table name to which data will be loaded to.
+    We need to provide Airflow 2 connection ids to this operator, one to connect to AWS for S3 access
     and another for access to Redshift. This connections need to be created in the Airflow UI
-    2. load_fact.py: This operator transforms data from stage tables to parameter provided fact table. 
-    In our case we have only fact table, but in case we had modelled more based on the use case, we just need to add another task in the DAG providing the table name to this operator
+    2. load_fact.py: This operator transforms data from stage tables to parameter provided fact table 
+    In our case we have only fact table, but in case we had modelled more based on the use case, we just need to add
+     another task in the DAG with using this operator providing the table name
     3. load_dimesion.py: This operator transforms data from stage tables to parameter provided dimension table. In our case
     we modelled the data in 4 dimension tables and hence we create 4 tasks using this operator in the DAG file
-    4. data_quality.py: This is a simple operator querying Redshift to check data exists in the parameter
-     provided table.
+    4. data_quality.py: This is a simple operator querying Redshift to check that data exists in the parameter
+     provided table
